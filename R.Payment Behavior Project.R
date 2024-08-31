@@ -10,9 +10,9 @@ names(assignment) = c("ID", "Customer ID", "Month", "Name", "Age", "SSN", "Occup
                       "Customer Credit Score")
 
 # Set working Directory 
-setwd("C:\\Users\\User\\Desktop\\Apu y2 sem1\\P for data analysis")
+setwd("C:\\Users\\User\\Desktop\\Portfolio")
 
-assignment<- read.csv("C:\\Users\\User\\Desktop\\Apu y2 sem1\\P for data analysis\\assignment.data.csv")
+assignment<- read.csv("C:\\Users\\User\\Desktop\\Portfolio\\Payment Behavior Project.csv")
 
 
 library(stringr)
@@ -21,7 +21,7 @@ library(tidyr)
 library(ggplot2)
 library(plotrix)
 
-assignment <- read.csv("C:\\Users\\User\\Desktop\\Apu y2 sem1\\P for data analysis\\assignment.data.csv",
+assignment <- read.csv("C:\\Users\\User\\Desktop\\Portfolio\\Payment Behavior Project.csv",
                        na.strings = c("", "", "", "","",
                                       "#F%$D@*&8","_______","","","",
                                       "","","","","",
@@ -312,152 +312,6 @@ boxplot(assignment$Monthly_Inhand_Salary)
 
 #Scatterplot
 #plot()
-
-#------------------------------------------------------------------------------------------------------------------------------------------#
-
-#Hypothesis 
-# Filter the dataframe that fullfill the requiement Delay from duedate <>5 and Payment behavior is low spent
-assignment_duedate <- assignment %>%
-  filter(Delay_from_due_date > 5, Payment_Behaviour == "Low_spent")
-
-assignment_duedate1 <- assignment %>%
-  filter(Delay_from_due_date < 5, Payment_Behaviour == "Low_spent")
-
-# Count the number of people meeting both criteria
-num_people <- nrow(assignment_duedate)
-num_people1 <- nrow(assignment_duedate1)
-
-# Further filter the data for people with age less than or more than 22
-assignment_duedate_age <- assignment_duedate %>%
-  filter(Age > 22)
-
-assignment_duedate_age1 <- assignment_duedate %>%
-  filter(Age < 22)
-
-# Count the number of people meeting all criteria
-num_people_age <- nrow(assignment_duedate_age)
-num_people_age1 <- nrow(assignment_duedate_age1)
-
-# Filter the data with Num of bank accounts that are less than and more than four
-assignment_duedate_age_account <- assignment_duedate_age %>%
-  filter(Num_Bank_Accounts < 4)
-
-assignment_duedate_age_account1 <- assignment_duedate_age %>%
-  filter(Num_Bank_Accounts > 4)
-
-# Count the number of people meeting all criteria
-num_people_age_22_account <- nrow(assignment_duedate_age_account)
-num_people_age_22_account1 <- nrow(assignment_duedate_age_account1)
-
-# Filter the data with monthly in-hand salary
-assignment_duedate_age_account_salary <- assignment_duedate_age_account1 %>%
-  filter(Monthly_Inhand_Salary < 3000)
-
-assignment_duedate_age_account_salary1 <- assignment_duedate_age_account1 %>%
-  filter(Monthly_Inhand_Salary > 3000)
-
-num_people_age_22_account_salary <- nrow(assignment_duedate_age_account_salary)
-num_people_age_22_account_salary1 <- nrow(assignment_duedate_age_account_salary1)
-
-
-# Combine the result
-Hypothesis4 <- data.frame(
-  criteria = c("Delay > 5 & Low spent", "Delay < 5 & Low spent", "Age > 22", "Age < 22",
-               "Num Bank Accounts < 4", "Num Bank Accounts > 4", "Monthly Salary < 3000", "Monthly Salary > 3000"),
-  count = c(num_people, num_people1, num_people_age, num_people_age1, num_people_age_22_account,
-            num_people_age_22_account1, num_people_age_22_account_salary ,num_people_age_22_account_salary1)
-)
-
-color = c("red", "blue", "red", "blue", "red", "blue", "red", "blue")
-Hypothesis4_graph <- data.frame(Hypothesis4,color)
-Hypothesis4_graph$criteria <- factor(Hypothesis4_graph$criteria, levels = Hypothesis4_graph$criteria)
-
-#print out the result
-print(Hypothesis4)
-
-
-# Result for No of People with low spent and Due Date <> 5
-num_people_graph1 <- data.frame(
-  Criteria = c("Delay > 5 days", "Delay < 5 days"),
-  Count = c(num_people, num_people1),
-  Color = c("red", "blue")
-)
-num_people_graph1$Criteria <- factor(num_people_graph1$Criteria, levels = num_people_graph1$Criteria)
-
-ggplot(num_people_graph1, aes(x = Criteria, y = Count, fill = Color)) +
-  geom_bar(stat = "identity") +
-  scale_fill_identity()+
-  labs(title = "No of People with low spent and Due Date <> 5",
-       x = "Criteria",
-       y = "Count") +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-
-# Result for No of People with Age <> 22
-hypothesis_graph <- data.frame(
-  Criteria = c("Age > 22", "Age < 22"),
-  Count = c(num_people_age, num_people_age1),
-  Color = c("red", "blue")
-)
-hypothesis_graph$Criteria <- factor(hypothesis_graph$Criteria, levels = hypothesis_graph$Criteria)
-
-ggplot(hypothesis_graph, aes(x = Criteria, y = Count, fill = Color)) +
-  geom_bar(stat = "identity") +
-  scale_fill_identity()+
-  labs(title = "No of People with Age <> 22",
-       x = "Criteria",
-       y = "Count") +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-
-# Result for No of People with account <> 4
-hypothesis_graph <- data.frame(
-  Criteria = c("Account > 4", "Account < 4"),
-  Count = c(num_people_age_22_account, num_people_age_22_account1),
-  Color = c("red", "blue")
-)
-hypothesis_graph$Criteria <- factor(hypothesis_graph$Criteria, levels = hypothesis_graph$Criteria)
-
-ggplot(hypothesis_graph, aes(x = Criteria, y = Count, fill = Color)) +
-  geom_bar(stat = "identity") +
-  scale_fill_identity()+
-  labs(title = "No of poeple with salary <> 4",
-       x = "Criteria",
-       y = "Count") +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-
-
-# Result for No of People with salary <> 3000
-hypothesis_graph <- data.frame(
-  Criteria = c("Salary < 3000", "Salary > 3000"),
-  Count = c(num_people_age_22_account_salary, num_people_age_22_account_salary1),
-  Color = c("red", "blue")
-)
-hypothesis_graph$Criteria <- factor(hypothesis_graph$Criteria, levels = hypothesis_graph$Criteria)
-
-ggplot(hypothesis_graph, aes(x = Criteria, y = Count, fill = Color)) +
-  geom_bar(stat = "identity") +
-  scale_fill_identity()+
-  labs(title = "No of people with <> 3000 salary",
-       x = "Criteria",
-       y = "Count") +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-
-
-# Combine all graph for better view
-
-ggplot(Hypothesis4_graph, aes(x = Criteria, y = Count, fill = Color)) +
-  geom_bar(stat = "identity") +
-  scale_fill_identity() +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 
 # Count the number of rows where Age is greater than 22 and low spent
 age_greater_22 = sum(assignment$Age > 22, assignment$Payment_Behaviour == "Low_spent")
